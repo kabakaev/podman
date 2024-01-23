@@ -9,6 +9,7 @@ import (
 	"github.com/containers/podman/v4/cmd/podman/common"
 	"github.com/containers/podman/v4/cmd/podman/registry"
 	"github.com/containers/podman/v4/pkg/domain/entities"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -67,6 +68,7 @@ func mount(cmd *cobra.Command, args []string) error {
 
 	reports, err := registry.ImageEngine().Mount(registry.GetContext(), args, mountOpts)
 	if err != nil {
+		logrus.Debugf("Error in registry.ImageEngine().Mount(): %v", err)
 		return err
 	}
 

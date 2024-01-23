@@ -14,6 +14,7 @@ import (
 
 	// register all of the built-in drivers
 	_ "github.com/containers/storage/drivers/register"
+	"github.com/sirupsen/logrus"
 
 	drivers "github.com/containers/storage/drivers"
 	"github.com/containers/storage/pkg/archive"
@@ -2728,6 +2729,8 @@ func (s *store) Version() ([][2]string, error) {
 }
 
 func (s *store) mount(id string, options drivers.MountOpts) (string, error) {
+	logrus.Debugf("Trying to mount layer id %s with options (%+v) in store (%+v)", id, options, *s)
+
 	rlstore, err := s.LayerStore()
 	if err != nil {
 		return "", err
@@ -2764,6 +2767,7 @@ func (s *store) mount(id string, options drivers.MountOpts) (string, error) {
 	if rlstore.Exists(id) {
 		return rlstore.Mount(id, options)
 	}
+	logrus.Errorf("Cannot mount layer id %s", id)
 	return "", ErrLayerUnknown
 }
 
